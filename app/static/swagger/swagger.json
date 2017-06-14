@@ -1,0 +1,410 @@
+{
+  "swagger": "2.0",
+  "info": {},
+  "host": "127.0.0.1:5000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Token",
+      "description": "Token Controller"
+    },
+    {
+      "name": "User",
+      "description": "User Controller"
+    }
+  ],
+  "paths": {
+    "/v1/tokens": {
+      "post": {
+        "tags": [
+          "Token"
+        ],
+        "summary": "Authenticate User",
+        "description": "Authenticate an API User and provide them with an Access Token",
+        "operationId": "authenticateUserUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "/"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "LoginDetails",
+            "description": "Login Details for API User",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginDetails"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully logged in the user",
+            "schema": {
+              "$ref": "#/definitions/TokenResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized to query or could not be found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        }
+      }
+    },
+    "/v1/users": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get all Users",
+        "description": "Lists all Users",
+        "operationId": "getAllUsersUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "/"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authentication Token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "username",
+            "in": "query",
+            "description": "username",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "q for query text in the query line i.e. q=tom gives an array of users called tom",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned users",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized to query or could not be found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Add a User",
+        "description": "Add a new User",
+        "operationId": "createUserUsingPOST",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "/"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authentication Token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "user",
+            "description": "user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created user",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "Unauthorized to query or could not be found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        }
+      }
+    },
+    "/v1/users/{username}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Get User by username",
+        "description": "Get a particular User based on their username",
+        "operationId": "getUserByNameUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "/"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authentication Token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "username",
+            "in": "path",
+            "description": "username",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully returned a User",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "Unauthorized to query or could not be found"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Delete a User",
+        "description": "Delete an existing User",
+        "operationId": "deleteUserUsingDELETE",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "/"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authentication Token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "username",
+            "in": "path",
+            "description": "username",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully removed user"
+          },
+          "401": {
+            "description": "Unauthorized to query or could not be found"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Updates a user",
+        "description": "Update an existing User",
+        "operationId": "updateUserUsingPATCH",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "/"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Authentication Token",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "username",
+            "in": "path",
+            "description": "username",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "user",
+            "description": "user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated a User",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "Unauthorized to query or could not be found"
+          },
+          "404": {
+            "description": "Object not found"
+          },
+          "500": {
+            "description": "Data store not configured or unreachable"
+          }
+        }
+      }
+    }
+  },
+    "definitions": {
+      "LoginDetails": {
+        "type": "object",
+        "properties": {
+          "grant-type": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "refresh-token": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "admin": {
+            "type": "boolean"
+          },
+          "display-name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "local": {
+            "type": "boolean"
+          },
+          "password": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "access-token": {
+            "type": "string"
+          },
+          "admin": {
+            "type": "boolean"
+          },
+          "display-name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "expires-at": {
+            "type": "string"
+          },
+          "expires-in": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "local": {
+            "type": "boolean"
+          },
+          "password": {
+            "type": "string"
+          },
+          "refresh-token": {
+            "type": "string"
+          },
+          "token-in": {
+            "type": "string"
+          },
+          "token-type": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
